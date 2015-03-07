@@ -5,8 +5,10 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import play.test.WithApplication;
 import static play.test.Helpers.*;
-import play.db.ebean.*;
-import java.util.List;
+import play.*;
+import play.libs.*;
+import com.avaje.ebean.Ebean;
+import java.util.*;
 
 public class ModelsTest extends WithApplication {
     @Before
@@ -64,5 +66,20 @@ public class ModelsTest extends WithApplication {
         List<Task> results = Task.findTodoInvolving("bob@gmail.com");
         assertEquals(1, results.size());
         assertEquals("Release next version", results.get(0).title);
+    }
+    
+    @Test
+    public void fullTest() {
+        Map<String,List<Object>> all = (Map<String,List<Object>>)Yaml.load("test-data.yml");
+        // Insert users first
+        Ebean.save(all.get("users"));
+        // Insert projects
+        Ebean.save(all.get("projects"));
+        for(Object project: all.get("projects")) {
+          // Insert the project/user relation
+          Ebean.saveManyToManyAssociations(project, "members");
+        }
+        // Insert tasks
+        Ebean.save(all.get("tasks"));
     }
 }
