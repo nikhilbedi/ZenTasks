@@ -1,14 +1,21 @@
-@(projects: List[Project])(body: Html)
+@(projects: List[Project], user: User)(body: Html)
 
 <html>
     <head>
         <title>Zentasks</title>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.7.1.js")"></script>
     </head>
     <body>
         <header>
             <a href="@routes.Application.index" id="logo"><span>Zen</span>tasks</a>
+            <dl id="user">
+                <dt>@user.name <span>(@user.email)</span></dt>
+                <dd>
+                    <a href="@routes.Application.logout()">Logout</a>
+                </dd>
+            </dl>
         </header>
         <nav>
             <h4 class="dashboard"><a href="#/">Dashboard</a></h4>
